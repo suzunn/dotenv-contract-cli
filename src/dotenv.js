@@ -22,6 +22,13 @@ function stripInlineComment(rawValue) {
   return result.trimEnd();
 }
 
+/**
+ * Parse dotenv-formatted text into key/value entries and non-fatal syntax issues.
+ *
+ * @param {string} text Dotenv file contents.
+ * @param {string} [source="input"] Name or path reported with parse issues.
+ * @returns {{ entries: Record<string, string>, issues: Array<{ source: string, line: number, message: string }> }}
+ */
 export function parseDotenv(text, source = "input") {
   const lines = text.split(/\r?\n/);
   const entries = {};

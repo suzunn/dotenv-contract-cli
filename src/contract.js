@@ -2,6 +2,24 @@ function sortKeys(values) {
   return [...values].sort((left, right) => left.localeCompare(right));
 }
 
+/**
+ * Compare parsed schema and environment entries and summarize contract failures.
+ *
+ * @param {{
+ *   schemaEntries: Record<string, string>,
+ *   envEntries: Record<string, string>,
+ *   allowEmpty?: Set<string>,
+ *   strict?: boolean
+ * }} options Contract comparison inputs.
+ * @returns {{
+ *   ok: boolean,
+ *   strict: boolean,
+ *   missing: string[],
+ *   empty: string[],
+ *   unexpected: string[],
+ *   counts: { required: number, provided: number, missing: number, empty: number, unexpected: number }
+ * }}
+ */
 export function compareContracts({ schemaEntries, envEntries, allowEmpty = new Set(), strict = false }) {
   const schemaKeys = Object.keys(schemaEntries);
   const envKeys = Object.keys(envEntries);
@@ -30,6 +48,14 @@ export function compareContracts({ schemaEntries, envEntries, allowEmpty = new S
   };
 }
 
+/**
+ * Format a contract comparison result for human-readable CLI output.
+ *
+ * @param {ReturnType<typeof compareContracts>} report Contract comparison result.
+ * @param {string} envPath Environment file path shown in the report.
+ * @param {string} schemaPath Contract file path shown in the report.
+ * @returns {string}
+ */
 export function formatTextReport(report, envPath, schemaPath) {
   const lines = [];
   lines.push(`Contract: ${schemaPath}`);
